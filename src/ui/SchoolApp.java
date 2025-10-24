@@ -1,90 +1,78 @@
 package ui;
 
 import java.util.Scanner;
+import model.*;
 
+/**
+ * Clase principal que permite interactuar con el sistema
+ * desde la consola (modo texto).
+ */
 public class SchoolApp {
-
-    /*
-     * ATENCION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-     * Agregue los atributos (relaciones) necesarios para conectar esta clase con el
-     * modelo.
-     */
-
-    private Scanner input;
 
     public static void main(String[] args) {
 
-        SchoolApp ui = new SchoolApp();
-        ui.menu();
+        Scanner sc = new Scanner(System.in);
+        SchoolController controller = new SchoolController();
+        boolean running = true;
 
-    }
+        System.out.println("🏫 Bienvenido al sistema de Computaricemos");
+        System.out.println("=========================================");
 
-    // Constructor
-    public SchoolApp() {
-        input = new Scanner(System.in);
-    }
-
-    /*
-     * ATENCION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-     * El siguiente metodo esta incompleto.
-     * Agregue la logica necesaria (instrucciones) para satisfacer los
-     * requerimientos
-     */
-
-    public void menu() {
-
-        System.out.println("Bienvenido a Computaricemos");
-
-        int option = 0;
-        do {
-            System.out.println("\nMenu Principal");
-            System.out.println("--------------------------------------------------------");
-            System.out.println("Digite alguna de las siguientes opciones");
-            System.out.println("1) Registrar computador");
-            System.out.println("2) Registrar incidente en computador");
-            System.out.println("3) Consultar el computador con más incidentes");
-            System.out.println("0) Salir del sistema");
-            option = input.nextInt();
+        while (running) {
+            System.out.println("\nMenú principal:");
+            System.out.println("1. Agregar computador");
+            System.out.println("2. Reportar incidente");
+            System.out.println("3. Mostrar computador con más incidentes");
+            System.out.println("4. Listar todos los computadores");
+            System.out.println("0. Salir");
+            System.out.print("👉 Elige una opción: ");
+            int option = sc.nextInt();
+            sc.nextLine(); // limpiar buffer
 
             switch (option) {
                 case 1:
-                    registrarComputador();
+                    System.out.print("Serial del computador: ");
+                    String serial = sc.nextLine();
+                    System.out.print("Piso (0-4): ");
+                    int floor = sc.nextInt();
+                    sc.nextLine();
+                    controller.addComputer(serial, floor);
                     break;
+
                 case 2:
-                    registrarIncidenteEnComputador();
+                    System.out.print("Serial del computador: ");
+                    String s = sc.nextLine();
+                    System.out.print("Descripción del incidente: ");
+                    String desc = sc.nextLine();
+                    System.out.print("Fecha del reporte: ");
+                    String date = sc.nextLine();
+                    System.out.print("Gravedad (BAJA, MEDIA, ALTA, CRITICA): ");
+                    String levelStr = sc.nextLine().toUpperCase();
+                    Severity level = Severity.valueOf(levelStr);
+                    controller.addIncidentToComputer(s, desc, date, level);
                     break;
+
                 case 3:
-                    consultarComputadorConMasIncidentes();
+                    controller.getComputerWithMostIncidents();
                     break;
+
+                case 4:
+                    for (Computer c : controller.getAllComputers()) {
+                        System.out.println(c.showData());
+                    }
+                    break;
+
                 case 0:
-                    System.out.println("\nGracias por usar nuestros servicios. Adios!");
+                    running = false;
+                    System.out.println("👋 Cerrando el sistema...");
                     break;
+
                 default:
-                    System.out.println("\nOpcion invalida. Intente nuevamente.");
+                    System.out.println("❗ Opción no válida, intenta otra vez.");
                     break;
             }
+        }
 
-        } while (option != 0);
-
+        sc.close();
     }
-
-    /*
-     * ATENCION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-     * Los siguientes metodos estan incompletos.
-     * Agregue la logica necesaria (instrucciones) para satisfacer los
-     * requerimientos
-     */
-
-    public void registrarComputador() {
-
-    }
-
-    public void registrarIncidenteEnComputador() {
-
-    }
-
-    public void consultarComputadorConMasIncidentes() {
-
-    }
-
 }
